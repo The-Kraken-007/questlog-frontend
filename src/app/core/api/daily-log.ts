@@ -1,0 +1,24 @@
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { DailyLogDto, CreateOrUpdateLogRequest } from '../models/daily-log';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DailyLogService {
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = '/api/logs';
+
+  getByDate(date: string): Observable<DailyLogDto> {
+    return this.http.get<DailyLogDto>(`${this.baseUrl}/${date}`);
+  }
+
+  getInRange(from: string, to: string): Observable<DailyLogDto[]> {
+    return this.http.get<DailyLogDto[]>(this.baseUrl, { params: { from, to } });
+  }
+
+  save(request: CreateOrUpdateLogRequest): Observable<DailyLogDto> {
+    return this.http.post<DailyLogDto>(this.baseUrl, request);
+  }
+}

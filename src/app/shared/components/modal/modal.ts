@@ -1,0 +1,109 @@
+import { Component, EventEmitter, Input, Output, HostListener } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-modal',
+  imports: [CommonModule],
+  template: `
+    @if (isOpen) {
+      <div class="modal-backdrop" (click)="close()">
+        <div class="modal-dialog glass-panel" (click)="$event.stopPropagation()">
+          <header class="modal-header">
+            <h2>{{ title }}</h2>
+            <button class="close-btn" (click)="close()" aria-label="Close modal">×</button>
+          </header>
+          <div class="modal-body">
+            <ng-content></ng-content>
+          </div>
+        </div>
+      </div>
+    }
+  `,
+  styles: `
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-dialog {
+      width: 100%;
+      max-width: 400px;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--color-surface-border);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+      color: var(--color-text);
+      background: var(--color-surface-hover);
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+  `
+})
+export class ModalComponent {
+  @Input({ required: true }) title = '';
+  @Input() isOpen = false;
+  
+  @Output() closed = new EventEmitter<void>();
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.isOpen) {
+      this.close();
+    }
+  }
+
+  close() {
+    this.closed.emit();
+  }
+}
