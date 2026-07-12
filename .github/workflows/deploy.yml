@@ -1,0 +1,61 @@
+name: Deploy — Frontend
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-deploy:
+    name: Build, Test & Docker Build (Angular 22 / Node 22)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (production)
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build Docker image
+        run: docker build -t questlog-frontend:${{ github.sha }} -t questlog-frontend:latest .
+
+      # ─────────────────────────────────────────────────────────────────────────
+      # TODO: When deployment infra is ready, uncomment and fill in these steps:
+      #
+      # - name: Log in to GHCR
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+      #
+      # - name: Push image to GHCR
+      #   run: |
+      #     docker tag questlog-frontend:latest ghcr.io/${{ github.repository_owner }}/questlog-frontend:latest
+      #     docker tag questlog-frontend:${{ github.sha }} ghcr.io/${{ github.repository_owner }}/questlog-frontend:${{ github.sha }}
+      #     docker push ghcr.io/${{ github.repository_owner }}/questlog-frontend:latest
+      #     docker push ghcr.io/${{ github.repository_owner }}/questlog-frontend:${{ github.sha }}
+      #
+      # - name: Deploy via SSH
+      #   uses: appleboy/ssh-action@v1
+      #   with:
+      #     host: ${{ secrets.SERVER_HOST }}
+      #     username: ${{ secrets.SERVER_USER }}
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     script: |
+      #       docker pull ghcr.io/${{ github.repository_owner }}/questlog-frontend:latest
+      #       docker compose -f /opt/questlog/docker-compose.yml up -d frontend
+      # ─────────────────────────────────────────────────────────────────────────
