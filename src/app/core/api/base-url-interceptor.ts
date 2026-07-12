@@ -1,13 +1,11 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { isDevMode } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
-  const baseUrl = isDevMode() ? 'http://localhost:5000' : ''; // Prod URL would go here
-  
   if (req.url.startsWith('/api')) {
-    const apiReq = req.clone({ url: `${baseUrl}${req.url}` });
+    const apiReq = req.clone({ url: `${environment.apiBaseUrl}${req.url}` });
     return next(apiReq);
   }
-  
+
   return next(req);
 };
