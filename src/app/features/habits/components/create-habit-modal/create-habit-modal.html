@@ -1,0 +1,43 @@
+<app-modal title="New Habit" [isOpen]="isOpen" (closed)="close()">
+  <form (ngSubmit)="onSubmit()" #form="ngForm" class="create-form">
+    
+    <div class="form-group">
+      <label for="habitName">Habit Name</label>
+      <input 
+        type="text" 
+        id="habitName" 
+        name="habitName" 
+        [(ngModel)]="name" 
+        required 
+        placeholder="e.g. Drink Water"
+        autocomplete="off"
+        class="input-field"
+        #nameInput="ngModel"
+      />
+      @if (nameInput.invalid && nameInput.touched) {
+        <span class="error-text">Name is required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label>Select Emoji</label>
+      <div class="emoji-grid">
+        @for (em of emojis; track em) {
+          <button 
+            type="button" 
+            class="emoji-btn" 
+            [class.selected]="selectedEmoji === em"
+            (click)="selectedEmoji = em">
+            {{ em }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Create Habit</button>
+    </div>
+
+  </form>
+</app-modal>

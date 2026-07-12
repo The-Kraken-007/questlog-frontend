@@ -1,0 +1,51 @@
+<app-modal title="New Goal" [isOpen]="isOpen" (closed)="close()">
+  <form (ngSubmit)="onSubmit()" #form="ngForm" class="create-form">
+
+    <div class="form-group">
+      <label for="goalTitle">Goal Title</label>
+      <input
+        type="text"
+        id="goalTitle"
+        name="goalTitle"
+        [(ngModel)]="title"
+        required
+        placeholder="e.g. Run a Half Marathon"
+        autocomplete="off"
+        class="input-field"
+        #titleInput="ngModel"
+      />
+      @if (titleInput.invalid && titleInput.touched) {
+        <span class="error-text">Title is required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="goalDesc">Description <span class="optional">(optional)</span></label>
+      <textarea
+        id="goalDesc"
+        name="goalDesc"
+        [(ngModel)]="description"
+        placeholder="What does achieving this look like?"
+        rows="3"
+        class="input-field textarea">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="targetDate">Target Date <span class="optional">(optional)</span></label>
+      <input
+        type="date"
+        id="targetDate"
+        name="targetDate"
+        [(ngModel)]="targetDate"
+        class="input-field"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Create Goal</button>
+    </div>
+
+  </form>
+</app-modal>

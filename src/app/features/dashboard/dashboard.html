@@ -1,1 +1,134 @@
-<p>dashboard works!</p>
+<div class="page-container">
+
+  <!-- Greeting header -->
+  <header class="greeting">
+    <div>
+      <h2>Good {{ timeOfDay() }}<span class="wave">👋</span></h2>
+      <p class="subtitle">{{ todayFormatted() }}</p>
+    </div>
+    <div class="date-badge glass-panel">
+      <span class="day-num">{{ dayNum() }}</span>
+      <span class="month-abbr">{{ monthAbbr() }}</span>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+    <div class="skeleton-grid">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="skeleton-card glass-panel"></div>
+      }
+    </div>
+  } @else if (data()) {
+
+    <div class="widgets-grid">
+
+      <!-- ── Widget 1: Today's Habits ──────────────────── -->
+      <section class="widget glass-panel habits-widget">
+        <div class="widget-header">
+          <span class="widget-icon">✅</span>
+          <h3>Today's Habits</h3>
+          <a routerLink="/habits" class="widget-link">View all →</a>
+        </div>
+
+        <div class="habit-ring-row">
+          <div class="ring-container">
+            <svg viewBox="0 0 36 36" class="ring">
+              <path class="ring-bg" d="M18 2a16 16 0 1 1 0 32A16 16 0 0 1 18 2"/>
+              <path class="ring-fill"
+                [style.stroke-dasharray]="ringDash() + ' 100'"
+                d="M18 2a16 16 0 1 1 0 32A16 16 0 0 1 18 2"/>
+            </svg>
+            <div class="ring-label">
+              <span class="ring-num">{{ data()!.todayHabits.completedCount }}</span>
+              <span class="ring-denom">/ {{ data()!.todayHabits.totalCount }}</span>
+            </div>
+          </div>
+          <div class="habit-quick-list">
+            @for (habit of data()!.todayHabits.habits.slice(0, 4); track habit.id) {
+              <div class="habit-quick-item" (click)="toggleHabit(habit.id)">
+                <span class="hq-emoji">{{ habit.emoji ?? '✅' }}</span>
+                <span class="hq-name" [class.done]="habit.isCompletedToday">{{ habit.name }}</span>
+                <span class="hq-check" [class.done]="habit.isCompletedToday">
+                  {{ habit.isCompletedToday ? '✓' : '' }}
+                </span>
+              </div>
+            }
+            @if (data()!.todayHabits.habits.length === 0) {
+              <p class="no-data">No habits yet. <a routerLink="/habits">Add one!</a></p>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Widget 2: Top Streaks ─────────────────────── -->
+      <section class="widget glass-panel streaks-widget">
+        <div class="widget-header">
+          <span class="widget-icon">🔥</span>
+          <h3>Top Streaks</h3>
+        </div>
+        @if (data()!.topStreaks.length === 0) {
+          <p class="no-data">Complete habits daily to build streaks!</p>
+        } @else {
+          <ul class="streak-list">
+            @for (s of data()!.topStreaks; track s.habitId) {
+              <li class="streak-item">
+                <span class="streak-emoji">{{ s.emoji ?? '⚡' }}</span>
+                <span class="streak-name">{{ s.name }}</span>
+                <app-streak-badge [count]="s.currentStreak"></app-streak-badge>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <!-- ── Widget 3: Active Goals ─────────────────────── -->
+      <section class="widget glass-panel goals-widget">
+        <div class="widget-header">
+          <span class="widget-icon">🎯</span>
+          <h3>Active Goals</h3>
+          <a routerLink="/goals" class="widget-link">View all →</a>
+        </div>
+        @if (data()!.activeGoals.length === 0) {
+          <p class="no-data">No active goals. <a routerLink="/goals">Set one!</a></p>
+        } @else {
+          <ul class="goal-list">
+            @for (goal of data()!.activeGoals; track goal.id) {
+              <li class="goal-item">
+                <div class="goal-item-header">
+                  <span class="goal-title">{{ goal.title }}</span>
+                  <span class="goal-milestones">{{ goal.completedMilestones }}/{{ goal.totalMilestones }}</span>
+                </div>
+                <app-progress-bar [percent]="goal.progressPercent"></app-progress-bar>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <!-- ── Widget 4: Today's Log ──────────────────────── -->
+      <section class="widget glass-panel log-widget">
+        <div class="widget-header">
+          <span class="widget-icon">📝</span>
+          <h3>Today's Log</h3>
+          <a routerLink="/log" class="widget-link">Open →</a>
+        </div>
+        @if (data()!.todayLog) {
+          <p class="log-preview">{{ data()!.todayLog }}</p>
+        } @else {
+          <div class="log-empty">
+            <p class="no-data">Nothing written today.</p>
+            <a routerLink="/log" class="btn-write">✍️ Write now</a>
+          </div>
+        }
+      </section>
+
+    </div>
+
+  } @else {
+    <div class="error-state glass-panel">
+      <p>⚠️ Failed to load dashboard. Is the backend running?</p>
+      <button class="btn-retry" (click)="load()">Retry</button>
+    </div>
+  }
+
+</div>

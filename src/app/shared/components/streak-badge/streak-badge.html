@@ -1,0 +1,4 @@
+<div class="streak-badge" [class.on-fire]="isOnFire" [class.hidden]="count === 0" title="{{ count }} day streak">
+  <span class="icon">{{ isOnFire ? '🔥' : '⚡' }}</span>
+  <span class="count">{{ count }}</span>
+</div>

@@ -1,0 +1,23 @@
+<div class="heatmap-wrapper">
+  <div class="months">
+    @for (month of months(); track $index) {
+      <span class="month-label">{{ month }}</span>
+    }
+  </div>
+  <div class="heatmap-grid">
+    @for (day of days(); track day.date) {
+      <div 
+        class="heatmap-cell" 
+        [class.completed]="day.isCompleted" 
+        [class.future]="day.isFuture"
+        [title]="day.date + (day.isCompleted ? ': Completed' : '')">
+      </div>
+    }
+  </div>
+  <div class="legend">
+    <span>Less</span>
+    <div class="heatmap-cell"></div>
+    <div class="heatmap-cell completed"></div>
+    <span>More</span>
+  </div>
+</div>
