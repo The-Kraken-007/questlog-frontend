@@ -1,0 +1,42 @@
+<div class="habit-card glass-panel" [class.expanded]="isExpanded()">
+  
+  <div class="card-header" (click)="toggleExpand()">
+    <div class="habit-info">
+      <span class="emoji">{{ habit.emoji }}</span>
+      <div class="details">
+        <h3>{{ habit.name }}</h3>
+        <app-streak-badge [count]="habit.currentStreak"></app-streak-badge>
+      </div>
+    </div>
+
+    <div class="actions" (click)="$event.stopPropagation()">
+      <button 
+        class="toggle-btn" 
+        [class.completed]="habit.isCompletedToday"
+        (click)="onToggle($event)"
+        [attr.aria-label]="habit.isCompletedToday ? 'Mark incomplete' : 'Mark complete'">
+        @if (habit.isCompletedToday) { <span class="checkmark">✓</span> }
+      </button>
+    </div>
+  </div>
+
+  @if (isExpanded()) {
+    <div class="card-body">
+      <div class="heatmap-section">
+        <h4>Activity (Last 3 Months)</h4>
+        @if (isLoadingEntries()) {
+          <div class="loading-state">Loading history...</div>
+        } @else {
+          <app-heatmap [entries]="entries()"></app-heatmap>
+        }
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-archive" (click)="onArchive()">
+          <span class="icon">🗑️</span> Archive Habit
+        </button>
+      </div>
+    </div>
+  }
+
+</div>

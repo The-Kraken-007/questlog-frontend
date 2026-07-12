@@ -1,1 +1,38 @@
-<p>habits works!</p>
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-title">
+      <h2>My Habits</h2>
+      <p class="subtitle">Build your daily routines</p>
+    </div>
+    <button class="btn-new" (click)="isCreateModalOpen.set(true)">
+      <span class="icon">+</span> New Habit
+    </button>
+  </header>
+
+  @if (isLoading()) {
+    <div class="loading-state">Loading habits...</div>
+  } @else if (habits().length === 0) {
+    <div class="empty-state glass-panel">
+      <span class="empty-icon">🌱</span>
+      <h3>No habits yet</h3>
+      <p>Start small. Create your first daily habit!</p>
+      <button class="btn-new" (click)="isCreateModalOpen.set(true)">Create Habit</button>
+    </div>
+  } @else {
+    <div class="habits-list">
+      @for (habit of habits(); track habit.id) {
+        <app-habit-card 
+          [habit]="habit"
+          (toggle)="onToggleHabit(habit)"
+          (archive)="onArchiveHabit(habit)">
+        </app-habit-card>
+      }
+    </div>
+  }
+
+  <app-create-habit-modal
+    [isOpen]="isCreateModalOpen()"
+    (closed)="isCreateModalOpen.set(false)"
+    (created)="onCreateHabit($event)">
+  </app-create-habit-modal>
+</div>

@@ -1,0 +1,13 @@
+@if (isOpen) {
+  <div class="modal-backdrop" (click)="close()">
+    <div class="modal-dialog glass-panel" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h2>{{ title }}</h2>
+        <button class="close-btn" (click)="close()" aria-label="Close modal">×</button>
+      </header>
+      <div class="modal-body">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+}

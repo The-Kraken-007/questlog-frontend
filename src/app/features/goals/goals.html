@@ -1,1 +1,49 @@
-<p>goals works!</p>
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-title">
+      <h2>My Goals</h2>
+      <p class="subtitle">Turn ambitions into achievements</p>
+    </div>
+    <button class="btn-new" (click)="isCreateModalOpen.set(true)">
+      <span>+</span> New Goal
+    </button>
+  </header>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    @for (tab of tabs; track tab) {
+      <button
+        class="tab"
+        [class.active]="activeFilter() === tab"
+        (click)="activeFilter.set(tab)">
+        {{ tab }}
+        <span class="tab-count">{{ countByStatus(tab) }}</span>
+      </button>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">Loading goals...</div>
+  } @else if (filteredGoals().length === 0) {
+    <div class="empty-state glass-panel">
+      <span class="empty-icon">🎯</span>
+      <h3>{{ activeFilter() === 'All' ? 'No goals yet' : 'No ' + activeFilter() + ' goals' }}</h3>
+      <p>Set a goal and track your progress towards it.</p>
+      @if (activeFilter() === 'All') {
+        <button class="btn-new" (click)="isCreateModalOpen.set(true)">Create Goal</button>
+      }
+    </div>
+  } @else {
+    <div class="goals-list">
+      @for (goal of filteredGoals(); track goal.id) {
+        <app-goal-card [goal]="goal" (goalUpdated)="onGoalUpdated($event)"></app-goal-card>
+      }
+    </div>
+  }
+
+  <app-create-goal-modal
+    [isOpen]="isCreateModalOpen()"
+    (closed)="isCreateModalOpen.set(false)"
+    (created)="onCreateGoal($event)">
+  </app-create-goal-modal>
+</div>

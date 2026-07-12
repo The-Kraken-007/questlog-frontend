@@ -1,1 +1,60 @@
-<p>daily-log works!</p>
+<div class="page-container">
+
+  <!-- Page header with date navigation -->
+  <header class="page-header">
+    <div class="header-title">
+      <h2>Daily Log</h2>
+      <p class="subtitle">{{ formattedSelectedDate() }}</p>
+    </div>
+    <div class="date-nav">
+      <button class="nav-btn" (click)="shiftDay(-1)" title="Previous day">‹</button>
+      <button class="today-btn" (click)="goToToday()" [class.active]="isToday()">Today</button>
+      <button class="nav-btn" (click)="shiftDay(1)" [disabled]="isToday()" title="Next day">›</button>
+    </div>
+  </header>
+
+  <!-- Main editor -->
+  <div class="editor-card glass-panel">
+    <div class="editor-toolbar">
+      <span class="save-indicator" [class.saving]="isSaving()" [class.saved]="isSaved()">
+        @if (isSaving()) { ⏳ Saving... }
+        @else if (isSaved()) { ✓ Saved }
+      </span>
+    </div>
+    <textarea
+      class="editor"
+      [(ngModel)]="editorContent"
+      (ngModelChange)="onContentChange($event)"
+      placeholder="What's on your mind today? Write freely — this is your private journal..."
+      [disabled]="isLoading()"
+    ></textarea>
+    <div class="editor-footer">
+      <span class="char-count">{{ editorContent.length }} characters</span>
+    </div>
+  </div>
+
+  <!-- Past 7 days quick-view -->
+  <section class="past-logs">
+    <h3>Recent Entries</h3>
+    @if (isLoadingHistory()) {
+      <p class="muted">Loading history...</p>
+    } @else if (pastLogs().length === 0) {
+      <p class="muted">No entries in the past 7 days.</p>
+    } @else {
+      <div class="log-list">
+        @for (log of pastLogs(); track log.date) {
+          <div
+            class="log-entry glass-panel"
+            [class.active]="log.date === selectedDate()"
+            (click)="selectDate(log.date)">
+            <div class="log-entry-header">
+              <span class="log-date">{{ formatShortDate(log.date) }}</span>
+              <span class="log-preview">{{ preview(log.content) }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+</div>
