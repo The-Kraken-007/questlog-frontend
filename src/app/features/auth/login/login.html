@@ -1,0 +1,52 @@
+<div class="auth-page">
+  <div class="auth-card glass-panel">
+    <div class="auth-header">
+      <h1 class="gradient-text">QuestLog</h1>
+      <p class="auth-subtitle">Welcome back. Sign in to continue.</p>
+    </div>
+
+    <form class="auth-form" (ngSubmit)="onSubmit()" #f="ngForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="you@example.com"
+          [(ngModel)]="email"
+          name="email"
+          autocomplete="email"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="••••••••"
+          [(ngModel)]="password"
+          name="password"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+
+      <div class="auth-forgot">
+        <a routerLink="/forgot-password">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <span class="spinner"></span> Signing in...
+        } @else {
+          Sign in
+        }
+      </button>
+    </form>
+
+    <p class="auth-switch">
+      Don't have an account? <a routerLink="/register">Create one</a>
+    </p>
+  </div>
+</div>

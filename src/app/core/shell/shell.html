@@ -18,6 +18,17 @@
         <span class="icon">📝</span> Daily Log
       </a>
     </nav>
+
+    <!-- User info and logout at the bottom of sidebar -->
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <span class="user-avatar">{{ auth.currentUser()?.username?.charAt(0)?.toUpperCase() }}</span>
+        <span class="user-name">{{ auth.currentUser()?.username }}</span>
+      </div>
+      <button class="logout-btn" (click)="auth.logout()" title="Sign out">
+        <span>⎋</span>
+      </button>
+    </div>
   </aside>
 
   <!-- Main Content -->
@@ -43,6 +54,10 @@
       <span class="icon">📝</span>
       <span class="label">Log</span>
     </a>
+    <button class="nav-item logout-mobile" (click)="auth.logout()" title="Sign out">
+      <span class="icon">⎋</span>
+      <span class="label">Logout</span>
+    </button>
   </nav>
   <!-- Global Toast Notifications -->
   <app-toast-container></app-toast-container>
