@@ -4,6 +4,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
 import { baseUrlInterceptor } from './core/api/base-url-interceptor';
+import { authInterceptor } from './core/api/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,6 +14,6 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    provideHttpClient(withInterceptors([baseUrlInterceptor]))
+    provideHttpClient(withInterceptors([baseUrlInterceptor, authInterceptor]))
   ]
 };
