@@ -11,6 +11,23 @@ describe('AuthService', () => {
   let routerSpy: any;
 
   beforeEach(() => {
+    // Mock localStorage if it's not defined in the test environment (e.g., Node 22+)
+    if (typeof localStorage === 'undefined' || !localStorage) {
+      const store: Record<string, string> = {};
+      const mockLocalStorage = {
+        getItem: (key: string) => store[key] || null,
+        setItem: (key: string, value: string) => { store[key] = value; },
+        removeItem: (key: string) => { delete store[key]; },
+        clear: () => { for (const k in store) delete store[k]; },
+        length: 0,
+        key: (index: number) => null
+      };
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: mockLocalStorage,
+        writable: true
+      });
+    }
+
     // Clear localStorage before each test so we have a clean slate
     localStorage.clear();
 
