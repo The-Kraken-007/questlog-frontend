@@ -28,9 +28,19 @@ export interface ActiveGoalDto {
   completedMilestones: number;
 }
 
+export interface DashboardTaskDto {
+  id: number;
+  questTaskListId: number;
+  name: string;
+  dueDate: string | null;
+  isCompleted: boolean;
+  listName: string;
+}
+
 export interface DashboardDto {
   todayHabits: TodayHabitsDto;
   topStreaks: StreakDto[];
   activeGoals: ActiveGoalDto[];
   todayLog: string | null;
+  upcomingTasks: DashboardTaskDto[];
 }

@@ -122,6 +122,32 @@
         }
       </section>
 
+      <!-- ── Widget 5: Pending Tasks ─────────────────────── -->
+      <section class="widget glass-panel tasks-widget">
+        <div class="widget-header">
+          <span class="widget-icon">📋</span>
+          <h3>Pending Tasks</h3>
+          <a routerLink="/tasks" class="widget-link">View all →</a>
+        </div>
+        @if (data()!.upcomingTasks.length === 0) {
+          <p class="no-data">No pending tasks!</p>
+        } @else {
+          <ul class="task-list">
+            @for (task of data()!.upcomingTasks; track task.id) {
+              <li class="task-item-dash">
+                <div class="task-info">
+                  <span class="task-name">{{ task.name }}</span>
+                  <span class="task-list-badge">{{ task.listName }}</span>
+                </div>
+                @if (task.dueDate) {
+                  <span class="task-date badge">{{ task.dueDate | date:'MMM d' }}</span>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
     </div>
 
   } @else {
