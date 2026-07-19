@@ -1,4 +1,4 @@
-<div class="shell-container">
+<div class="shell-container" (click)="isProfileMenuOpen.set(false)">
   <!-- Desktop Sidebar -->
   <aside class="sidebar desktop-only glass-panel">
     <div class="logo">
@@ -7,6 +7,9 @@
     <nav class="nav-menu">
       <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
         <span class="icon">🏠</span> Dashboard
+      </a>
+      <a routerLink="/tasks" routerLinkActive="active" class="nav-item">
+        <span class="icon">📋</span> Tasks
       </a>
       <a routerLink="/habits" routerLinkActive="active" class="nav-item">
         <span class="icon">✅</span> Habits
@@ -21,13 +24,28 @@
 
     <!-- User info and logout at the bottom of sidebar -->
     <div class="sidebar-footer">
-      <div class="user-info">
+      <div class="user-profile-trigger" (click)="toggleProfileMenu(); $event.stopPropagation()">
         <span class="user-avatar">{{ auth.currentUser()?.username?.charAt(0)?.toUpperCase() }}</span>
         <span class="user-name">{{ auth.currentUser()?.username }}</span>
       </div>
-      <button class="logout-btn" (click)="auth.logout()" title="Sign out">
-        <span>⎋</span>
-      </button>
+
+      <!-- Desktop Profile Dropdown -->
+      @if (isProfileMenuOpen()) {
+        <div class="profile-dropdown glass-panel" (click)="$event.stopPropagation()">
+           <div class="dropdown-header">
+             <span class="user-name-large">{{ auth.currentUser()?.username }}</span>
+           </div>
+           <button class="dropdown-item text-danger" (click)="confirmLogout()">
+             <span class="icon" style="display: flex; align-items: center;">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                 <polyline points="16 17 21 12 16 7"></polyline>
+                 <line x1="21" y1="12" x2="9" y2="12"></line>
+               </svg>
+             </span> Logout
+           </button>
+        </div>
+      }
     </div>
   </aside>
 
@@ -42,6 +60,10 @@
       <span class="icon">🏠</span>
       <span class="label">Home</span>
     </a>
+    <a routerLink="/tasks" routerLinkActive="active" class="nav-item">
+      <span class="icon">📋</span>
+      <span class="label">Tasks</span>
+    </a>
     <a routerLink="/habits" routerLinkActive="active" class="nav-item">
       <span class="icon">✅</span>
       <span class="label">Habits</span>
@@ -54,11 +76,42 @@
       <span class="icon">📝</span>
       <span class="label">Log</span>
     </a>
-    <button class="nav-item logout-mobile" (click)="auth.logout()" title="Sign out">
-      <span class="icon">⎋</span>
-      <span class="label">Logout</span>
+    <button class="nav-item profile-mobile" (click)="toggleProfileMenu(); $event.stopPropagation()" title="Profile" [class.active]="isProfileMenuOpen()">
+      <span class="user-avatar-mobile">{{ auth.currentUser()?.username?.charAt(0)?.toUpperCase() }}</span>
+      <span class="label">Profile</span>
     </button>
+    
+    <!-- Mobile Profile Dropdown -->
+    @if (isProfileMenuOpen()) {
+      <div class="profile-dropdown-mobile glass-panel" (click)="$event.stopPropagation()">
+         <div class="dropdown-header">
+           <span class="user-avatar">{{ auth.currentUser()?.username?.charAt(0)?.toUpperCase() }}</span>
+           <span class="user-name-large">{{ auth.currentUser()?.username }}</span>
+         </div>
+         <button class="dropdown-item text-danger" (click)="confirmLogout()">
+           <span class="icon" style="display: flex; align-items: center;">
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+               <polyline points="16 17 21 12 16 7"></polyline>
+               <line x1="21" y1="12" x2="9" y2="12"></line>
+             </svg>
+           </span> Logout
+         </button>
+      </div>
+    }
   </nav>
+
   <!-- Global Toast Notifications -->
   <app-toast-container></app-toast-container>
+
+  <!-- Logout Confirmation Modal -->
+  <app-modal [title]="'Confirm Logout'" [isOpen]="isLogoutModalOpen()" (closed)="isLogoutModalOpen.set(false)">
+    <div class="modal-body" style="padding-bottom: 20px;">
+      Are you sure you want to log out of your account?
+    </div>
+    <div class="modal-actions" style="display: flex; gap: 10px; justify-content: flex-end;">
+      <button class="btn btn-surface" (click)="isLogoutModalOpen.set(false)">Cancel</button>
+      <button class="btn btn-primary bg-danger" style="background: var(--color-danger); color: white;" (click)="executeLogout()">Logout</button>
+    </div>
+  </app-modal>
 </div>
