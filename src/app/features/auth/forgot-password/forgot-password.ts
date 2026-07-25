@@ -56,9 +56,8 @@ export class ForgotPassword {
         this.step.set(1); // reset back so user can go to login
         this.isLoading.set(false);
       },
-      error: (err) => {
-        const msg = err?.error?.title ?? 'Invalid or expired token.';
-        this.toast.error(msg);
+      error: () => {
+        // Error toast (invalid/expired token) handled globally by errorInterceptor
         this.isLoading.set(false);
       }
     });

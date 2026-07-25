@@ -5,7 +5,6 @@ import { DailyLogService } from '../../core/api/daily-log';
 import { DailyLogDto } from '../../core/models/daily-log';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ToastService } from '../../core/toast';
 
 @Component({
   selector: 'app-daily-log',
@@ -15,7 +14,6 @@ import { ToastService } from '../../core/toast';
 })
 export class DailyLog implements OnInit, OnDestroy {
   private readonly logService = inject(DailyLogService);
-  private readonly toast = inject(ToastService);
   private readonly destroy$ = new Subject<void>();
   private readonly contentChange$ = new Subject<string>();
 
@@ -123,9 +121,8 @@ export class DailyLog implements OnInit, OnDestroy {
         // Auto-clear "Saved" badge after 2s
         setTimeout(() => this.isSaved.set(false), 2000);
       },
-      error: (err) => {
-        console.error('Failed to save log', err);
-        this.toast.error('Could not save your log. Please try again.');
+      error: () => {
+        // Error toast handled globally by errorInterceptor
         this.isSaving.set(false);
       }
     });
@@ -142,8 +139,8 @@ export class DailyLog implements OnInit, OnDestroy {
         this.pastLogs.set(logs.sort((a, b) => b.date.localeCompare(a.date)));
         this.isLoadingHistory.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load history', err);
+      error: () => {
+        // Error toast handled globally by errorInterceptor
         this.isLoadingHistory.set(false);
       }
     });

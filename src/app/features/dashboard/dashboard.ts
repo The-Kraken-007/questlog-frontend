@@ -6,7 +6,6 @@ import { DashboardDto } from '../../core/models/dashboard';
 import { ProgressBarComponent } from '../../shared/components/progress-bar/progress-bar';
 import { StreakBadgeComponent } from '../../shared/components/streak-badge/streak-badge';
 import { HabitService } from '../../core/api/habit';
-import { ToastService } from '../../core/toast';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +16,6 @@ import { ToastService } from '../../core/toast';
 export class Dashboard implements OnInit {
   private readonly dashboardService = inject(DashboardService);
   private readonly habitService = inject(HabitService);
-  private readonly toast = inject(ToastService);
 
   data = signal<DashboardDto | null>(null);
   isLoading = signal(true);
@@ -35,7 +33,7 @@ export class Dashboard implements OnInit {
     this.isLoading.set(true);
     this.dashboardService.get().subscribe({
       next: (d) => { this.data.set(d); this.isLoading.set(false); },
-      error: (err) => { console.error('Dashboard load failed', err); this.data.set(null); this.isLoading.set(false); this.toast.error('Failed to load dashboard. Is the backend running?'); }
+      error: () => { /* Error toast handled globally by errorInterceptor */ this.data.set(null); this.isLoading.set(false); }
     });
   }
 
@@ -43,7 +41,7 @@ export class Dashboard implements OnInit {
     const today = new Date().toISOString().split('T')[0];
     this.habitService.toggle(habitId, today).subscribe({
       next: () => this.load(), // Refresh dashboard after toggle
-      error: (err) => { console.error('Toggle failed', err); this.toast.error('Could not update habit.'); }
+      error: () => { /* Error toast handled globally by errorInterceptor */ }
     });
   }
 

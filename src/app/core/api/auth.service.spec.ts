@@ -115,12 +115,41 @@ describe('AuthService', () => {
   it('should initialize correctly if token exists in localStorage', () => {
     localStorage.setItem('questlog_token', 'existing-token');
     localStorage.setItem('questlog_user', JSON.stringify({ username: 'existing', email: 'e@e.com' }));
-    
+
     // Re-create service so it reads from localStorage on instantiation
     const newService = new AuthService(TestBed.inject(HttpTestingController) as any, routerSpy);
 
     expect(newService.isAuthenticated()).toBe(true);
     expect(newService.token()).toBe('existing-token');
     expect(newService.currentUser()?.username).toBe('existing');
+  });
+
+  it('should generate a fresh correlation id on login', () => {
+    localStorage.setItem('ql_correlation_id', 'old-session-id');
+    const mockResponse = { token: 'fake-jwt', username: 'testuser', email: 'test@test.com' };
+
+    service.login('test@test.com', 'password').subscribe();
+    httpMock.expectOne('/api/auth/login').flush(mockResponse);
+
+    const corrId = localStorage.getItem('ql_correlation_id');
+    expect(corrId).toBeTruthy();
+    expect(corrId).not.toBe('old-session-id');
+  });
+
+  it('should clear the correlation id on logout', () => {
+    localStorage.setItem('ql_correlation_id', 'session-id');
+
+    service.logout();
+
+    expect(localStorage.getItem('ql_correlation_id')).toBeNull();
+  });
+
+  it('should generate a correlation id on bootstrap if a token exists but none is stored', () => {
+    localStorage.setItem('questlog_token', 'existing-token');
+    localStorage.setItem('questlog_user', JSON.stringify({ username: 'existing', email: 'e@e.com' }));
+
+    new AuthService(TestBed.inject(HttpTestingController) as any, routerSpy);
+
+    expect(localStorage.getItem('ql_correlation_id')).toBeTruthy();
   });
 });

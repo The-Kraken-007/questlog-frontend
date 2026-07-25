@@ -20,7 +20,7 @@ export class TaskService {
       const lists = await firstValueFrom(this.http.get<QuestTaskList[]>('/api/tasklists'));
       this._lists.set(lists);
     } catch (error) {
-      this.toast.error('Failed to load tasks');
+      // Error toast handled globally by errorInterceptor
     } finally {
       this.loading.set(false);
     }
@@ -35,7 +35,7 @@ export class TaskService {
       this._lists.update(l => [...l, newList]);
       return newList;
     } catch (error) {
-      this.toast.error('Failed to create list');
+      // Error toast handled globally by errorInterceptor
       return null;
     }
   }
@@ -49,8 +49,7 @@ export class TaskService {
       await firstValueFrom(this.http.delete(`/api/tasklists/${id}`));
       this.toast.success('List deleted');
     } catch (error) {
-      this._lists.set(prevLists); // Revert on failure
-      this.toast.error('Failed to delete list');
+      this._lists.set(prevLists); // Revert on failure; toast handled globally by errorInterceptor
     }
   }
 
@@ -75,7 +74,7 @@ export class TaskService {
         return list;
       }));
     } catch (error) {
-      this.toast.error('Failed to create task');
+      // Error toast handled globally by errorInterceptor
     }
   }
 
@@ -104,7 +103,7 @@ export class TaskService {
         }
         return list;
       }));
-      this.toast.error('Failed to toggle task');
+      // Error toast handled globally by errorInterceptor
     }
   }
 
@@ -122,8 +121,7 @@ export class TaskService {
       await firstValueFrom(this.http.delete(`/api/tasks/${taskId}`));
       this.toast.success('Task deleted');
     } catch (error) {
-      this._lists.set(prevLists); // Revert
-      this.toast.error('Failed to delete task');
+      this._lists.set(prevLists); // Revert; toast handled globally by errorInterceptor
     }
   }
 }
