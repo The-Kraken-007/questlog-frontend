@@ -4,7 +4,6 @@ import { HabitService } from '../../core/api/habit';
 import { HabitDto } from '../../core/models/habit';
 import { HabitCardComponent } from './components/habit-card/habit-card';
 import { CreateHabitModalComponent } from './components/create-habit-modal/create-habit-modal';
-import { ToastService } from '../../core/toast';
 
 @Component({
   selector: 'app-habits',
@@ -14,7 +13,6 @@ import { ToastService } from '../../core/toast';
 })
 export class Habits implements OnInit {
   private readonly habitService = inject(HabitService);
-  private readonly toast = inject(ToastService);
 
   habits = signal<HabitDto[]>([]);
   isLoading = signal(true);
@@ -31,9 +29,8 @@ export class Habits implements OnInit {
         this.habits.set(data);
         this.isLoading.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load habits', err);
-        this.toast.error('Failed to load habits. Is the backend running?');
+      error: () => {
+        // Error toast is handled globally by errorInterceptor
         this.isLoading.set(false);
       }
     });
@@ -45,10 +42,7 @@ export class Habits implements OnInit {
         // Optimistically add to the list
         this.habits.update(h => [...h, newHabit]);
       },
-      error: (err) => {
-        console.error('Failed to create habit', err);
-        this.toast.error('Could not create habit. Please try again.');
-      }
+      error: () => { /* Error toast handled globally by errorInterceptor */ }
     });
   }
 
@@ -76,10 +70,8 @@ export class Habits implements OnInit {
         // Sync with exact server state just in case logic differed
         this.habits.update(list => list.map(h => h.id === updatedHabit.id ? updatedHabit : h));
       },
-      error: (err) => {
-        console.error('Failed to toggle habit', err);
-        this.toast.error('Could not update habit. Please try again.');
-        // Revert optimistic update
+      error: () => {
+        // Error toast handled globally by errorInterceptor; revert the optimistic update
         this.habits.update(list => list.map(h => {
           if (h.id === habit.id) {
             return {
@@ -99,10 +91,7 @@ export class Habits implements OnInit {
       next: () => {
         this.habits.update(list => list.filter(h => h.id !== habit.id));
       },
-      error: (err) => {
-        console.error('Failed to archive habit', err);
-        this.toast.error('Could not archive habit. Please try again.');
-      }
+      error: () => { /* Error toast handled globally by errorInterceptor */ }
     });
   }
 }

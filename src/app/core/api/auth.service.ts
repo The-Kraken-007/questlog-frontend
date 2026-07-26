@@ -2,6 +2,7 @@ import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
+import { CORRELATION_ID_STORAGE_KEY } from './correlation.interceptor';
 
 export interface AuthUser {
   username: string;
@@ -26,7 +27,13 @@ export class AuthService {
   /** True if a valid token is in storage */
   readonly isAuthenticated = computed(() => !!this.token());
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    // Sessions created before correlation tracing existed have a token but no
+    // correlation id — generate one so every request is traceable.
+    if (this.token() && !localStorage.getItem(CORRELATION_ID_STORAGE_KEY)) {
+      localStorage.setItem(CORRELATION_ID_STORAGE_KEY, crypto.randomUUID());
+    }
+  }
 
   login(email: string, password: string) {
     return this.http.post<AuthResponse>('/api/auth/login', { email, password }).pipe(
@@ -43,6 +50,8 @@ export class AuthService {
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
+    // End the tracing session — the next login generates a fresh correlation id.
+    localStorage.removeItem(CORRELATION_ID_STORAGE_KEY);
     this.token.set(null);
     this.currentUser.set(null);
     this.router.navigate(['/login']);
@@ -52,6 +61,8 @@ export class AuthService {
     localStorage.setItem(this.TOKEN_KEY, res.token);
     const user: AuthUser = { username: res.username, email: res.email };
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    // A login starts a new tracing session, so always mint a fresh id.
+    localStorage.setItem(CORRELATION_ID_STORAGE_KEY, crypto.randomUUID());
     this.token.set(res.token);
     this.currentUser.set(user);
   }

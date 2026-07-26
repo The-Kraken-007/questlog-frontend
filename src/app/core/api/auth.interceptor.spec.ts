@@ -61,4 +61,30 @@ describe('authInterceptor', () => {
     expect(req.request.headers.has('Authorization')).toBe(false);
     req.flush([]);
   });
+
+  it('should clear the correlation id on 401 so the next login starts a new session', () => {
+    // Mock localStorage if it's not defined in the test environment (e.g., Node 22+)
+    if (typeof localStorage === 'undefined' || !localStorage) {
+      const store: Record<string, string> = {};
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: {
+          getItem: (key: string) => store[key] || null,
+          setItem: (key: string, value: string) => { store[key] = value; },
+          removeItem: (key: string) => { delete store[key]; },
+          clear: () => { for (const k in store) delete store[k]; },
+          length: 0,
+          key: (index: number) => null
+        },
+        writable: true
+      });
+    }
+    localStorage.setItem('ql_correlation_id', 'expired-session-id');
+
+    http.get('/api/habits').subscribe({ error: () => {} });
+
+    const req = httpMock.expectOne('/api/habits');
+    req.flush({ title: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
+
+    expect(localStorage.getItem('ql_correlation_id')).toBeNull();
+  });
 });

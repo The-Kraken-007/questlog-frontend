@@ -2,7 +2,6 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/api/auth.service';
-import { ToastService } from '../../../core/toast';
 
 @Component({
   selector: 'app-register',
@@ -19,8 +18,7 @@ export class Register {
 
   constructor(
     private auth: AuthService,
-    private router: Router,
-    private toast: ToastService
+    private router: Router
   ) {}
 
   onSubmit() {
@@ -29,9 +27,8 @@ export class Register {
 
     this.auth.register(this.username, this.email, this.password).subscribe({
       next: () => this.router.navigate(['/dashboard']),
-      error: (err: any) => {
-        const msg = err?.error?.title ?? err?.error?.message ?? 'Registration failed. Please try again.';
-        this.toast.error(msg);
+      error: () => {
+        // Error toast (400 validation / 409 duplicate) handled globally by errorInterceptor
         this.isLoading.set(false);
       }
     });
