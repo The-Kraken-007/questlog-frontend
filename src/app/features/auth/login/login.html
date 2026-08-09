@@ -14,9 +14,14 @@
           placeholder="you@example.com"
           [(ngModel)]="email"
           name="email"
+          #emailModel="ngModel"
+          email
           autocomplete="email"
           required
         />
+        @if (emailModel.invalid && emailModel.touched) {
+          <div class="form-error">Please enter a valid email.</div>
+        }
       </div>
 
       <div class="form-group">
@@ -36,7 +41,7 @@
         <a routerLink="/forgot-password">Forgot password?</a>
       </div>
 
-      <button type="submit" class="btn-primary" [disabled]="isLoading()">
+      <button type="submit" class="btn-primary" [disabled]="isLoading() || f.invalid">
         @if (isLoading()) {
           <span class="spinner"></span> Signing in...
         } @else {

@@ -152,3 +152,14 @@
 .auth-switch a:hover {
   text-decoration: underline;
 }
+
+/* Inline form errors */
+.form-error {
+  color: var(--color-danger);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.form-group input.ng-invalid.ng-touched {
+  border-color: var(--color-danger);
+}

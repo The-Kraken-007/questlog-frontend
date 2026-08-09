@@ -114,7 +114,7 @@ describe('errorInterceptor', () => {
     const req = httpMock.expectOne('/api/habits');
     req.error(new ProgressEvent('error'), { status: 0 });
 
-    expect(toastSpy.error).toHaveBeenCalledWith('Network error — please check your connection.');
+    expect(toastSpy.error).toHaveBeenCalledWith('Something went wrong. Please come back later.');
   });
 
   it('never exposes the correlation id in the toast message', () => {
