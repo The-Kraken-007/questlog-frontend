@@ -5,7 +5,7 @@
       <p class="auth-subtitle">Create your account to get started.</p>
     </div>
 
-    <form class="auth-form" (ngSubmit)="onSubmit()">
+    <form class="auth-form" (ngSubmit)="onSubmit()" #f="ngForm">
       <div class="form-group">
         <label for="username">Username</label>
         <input
@@ -14,9 +14,14 @@
           placeholder="Your display name"
           [(ngModel)]="username"
           name="username"
+          #usernameModel="ngModel"
+          pattern="^[a-zA-Z0-9]+$"
           autocomplete="username"
           required
         />
+        @if (usernameModel.invalid && usernameModel.touched) {
+          <div class="form-error">Username can only contain letters and numbers.</div>
+        }
       </div>
 
       <div class="form-group">
@@ -27,9 +32,14 @@
           placeholder="you@example.com"
           [(ngModel)]="email"
           name="email"
+          #emailModel="ngModel"
+          email
           autocomplete="email"
           required
         />
+        @if (emailModel.invalid && emailModel.touched) {
+          <div class="form-error">Please enter a valid email.</div>
+        }
       </div>
 
       <div class="form-group">
@@ -37,16 +47,20 @@
         <input
           id="password"
           type="password"
-          placeholder="At least 6 characters"
+          placeholder="At least 8 chars, 1 uppercase, 1 special"
           [(ngModel)]="password"
           name="password"
+          #passwordModel="ngModel"
           autocomplete="new-password"
           required
-          minlength="6"
+          pattern="^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$"
         />
+        @if (passwordModel.invalid && passwordModel.touched) {
+          <div class="form-error">Password must be 8+ chars with 1 uppercase and 1 special character.</div>
+        }
       </div>
 
-      <button type="submit" class="btn-primary" [disabled]="isLoading()">
+      <button type="submit" class="btn-primary" [disabled]="isLoading() || f.invalid">
         @if (isLoading()) {
           <span class="spinner"></span> Creating account...
         } @else {

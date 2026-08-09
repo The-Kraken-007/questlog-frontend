@@ -29,8 +29,10 @@ export class Login {
     this.auth.login(this.email, this.password).subscribe({
       next: () => this.router.navigate(['/dashboard']),
       error: (err: any) => {
-        const msg = err?.error?.title ?? err?.error?.message ?? 'Login failed. Please try again.';
-        this.toast.error(msg);
+        if (err.status === 401) {
+          const msg = err?.error?.title ?? err?.error?.message ?? 'Login failed. Please try again.';
+          this.toast.error(msg);
+        }
         this.isLoading.set(false);
       }
     });

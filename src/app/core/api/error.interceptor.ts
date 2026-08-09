@@ -61,8 +61,8 @@ function buildUserMessage(err: HttpErrorResponse): string {
     if (problem.title) return problem.title;
   }
 
-  if (err.status === 0) {
-    return 'Network error — please check your connection.';
+  if (err.status === 0 || err.status >= 500) {
+    return 'Something went wrong. Please come back later.';
   }
 
   return 'Something went wrong. Please try again.';
