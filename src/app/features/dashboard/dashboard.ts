@@ -6,10 +6,11 @@ import { DashboardDto } from '../../core/models/dashboard';
 import { ProgressBarComponent } from '../../shared/components/progress-bar/progress-bar';
 import { StreakBadgeComponent } from '../../shared/components/streak-badge/streak-badge';
 import { HabitService } from '../../core/api/habit';
+import { CharacterCardComponent } from './character-card/character-card';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterLink, ProgressBarComponent, StreakBadgeComponent],
+  imports: [CommonModule, RouterLink, ProgressBarComponent, StreakBadgeComponent, CharacterCardComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
