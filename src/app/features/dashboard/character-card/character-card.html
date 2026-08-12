@@ -1,0 +1,19 @@
+@if (isLoading()) {
+  <div class="character-card glass-panel skeleton-card"></div>
+} @else if (profile(); as p) {
+  <div class="character-card glass-panel">
+    <div class="level-badge">
+      <span class="level-number">{{ p.currentLevel }}</span>
+    </div>
+    <div class="character-info">
+      <h3 class="character-title">{{ p.title }}</h3>
+      <div class="xp-bar-container">
+        <div class="xp-bar">
+          <div class="xp-fill" [style.width.%]="xpPercent()"></div>
+        </div>
+        <span class="xp-text">{{ p.xpInCurrentLevel }} / {{ p.xpForCurrentLevel }} XP</span>
+      </div>
+      <span class="xp-next">{{ p.xpToNextLevel }} XP to next level</span>
+    </div>
+  </div>
+}

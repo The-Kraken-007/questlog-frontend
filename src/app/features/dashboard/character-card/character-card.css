@@ -1,0 +1,106 @@
+.character-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+/* ── Level Badge ── */
+.level-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary-start), var(--color-primary-end));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+}
+
+.level-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* ── Character Info ── */
+.character-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.character-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  background: linear-gradient(135deg, var(--color-primary-start), var(--color-primary-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── XP Bar ── */
+.xp-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.xp-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-start), var(--color-primary-end));
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.xp-text {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.xp-next {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Skeleton ── */
+.skeleton-card {
+  height: 104px;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .character-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .xp-bar-container {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .xp-bar {
+    width: 100%;
+  }
+}
