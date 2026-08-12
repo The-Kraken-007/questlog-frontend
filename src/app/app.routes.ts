@@ -8,6 +8,7 @@ import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
 import { ForgotPassword } from './features/auth/forgot-password/forgot-password';
 import { authGuard } from './core/api/auth.guard';
+import { Achievements } from './features/achievements/achievements';
 
 export const routes: Routes = [
   // ── Public routes (no auth required) ─────────────────────────────────────
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: 'habits', component: Habits },
       { path: 'goals', component: Goals },
       { path: 'log', component: DailyLog },
+      { path: 'achievements', component: Achievements },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   }

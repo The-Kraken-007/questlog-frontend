@@ -20,6 +20,9 @@
       <a routerLink="/log" routerLinkActive="active" class="nav-item">
         <span class="icon">📝</span> Daily Log
       </a>
+      <a routerLink="/achievements" routerLinkActive="active" class="nav-item">
+        <span class="icon">🏆</span> Achievements
+      </a>
     </nav>
 
     <!-- User info and logout at the bottom of sidebar -->
@@ -75,6 +78,10 @@
     <a routerLink="/log" routerLinkActive="active" class="nav-item">
       <span class="icon">📝</span>
       <span class="label">Log</span>
+    </a>
+    <a routerLink="/achievements" routerLinkActive="active" class="nav-item">
+      <span class="icon">🏆</span>
+      <span class="label">Awards</span>
     </a>
     <button class="nav-item profile-mobile" (click)="toggleProfileMenu(); $event.stopPropagation()" title="Profile" [class.active]="isProfileMenuOpen()">
       <span class="user-avatar-mobile">{{ auth.currentUser()?.username?.charAt(0)?.toUpperCase() }}</span>

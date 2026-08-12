@@ -1,0 +1,56 @@
+<div class="page-container">
+  <header class="page-header">
+    <h2>Achievements</h2>
+    <p class="subtitle">{{ unlockedCount() }} / {{ achievements().length }} unlocked</p>
+  </header>
+
+  <!-- Category Filter Tabs -->
+  <div class="filter-tabs">
+    @for (cat of categories; track cat) {
+      <button
+        class="filter-tab"
+        [class.active]="activeFilter() === cat"
+        (click)="setFilter(cat)">
+        {{ cat }}
+      </button>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="achievements-grid">
+      @for (i of [1,2,3,4,5,6,7,8]; track i) {
+        <div class="achievement-card glass-panel skeleton-card"></div>
+      }
+    </div>
+  } @else {
+    <div class="achievements-grid">
+      @for (achievement of filtered(); track trackByKey($index, achievement)) {
+        <div class="achievement-card glass-panel" [class.locked]="!achievement.unlocked">
+          <div class="achievement-icon">
+            @if (achievement.unlocked) {
+              {{ achievement.icon }}
+            } @else {
+              <span class="lock-icon">?</span>
+            }
+          </div>
+          <div class="achievement-info">
+            <h4 class="achievement-name">
+              {{ achievement.unlocked ? achievement.name : '???' }}
+            </h4>
+            <p class="achievement-desc">
+              {{ achievement.unlocked ? achievement.description : 'Keep going to unlock this achievement.' }}
+            </p>
+            @if (achievement.unlocked && achievement.unlockedAt) {
+              <span class="achievement-date">
+                Unlocked {{ achievement.unlockedAt | date:'MMM d, y' }}
+              </span>
+            }
+          </div>
+          <span class="achievement-category">{{ achievement.category }}</span>
+        </div>
+      } @empty {
+        <p class="no-data">No achievements in this category.</p>
+      }
+    </div>
+  }
+</div>
