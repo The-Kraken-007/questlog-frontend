@@ -40,11 +40,43 @@ describe('GoalService', () => {
     req.flush(mockGoals);
   });
 
-  it('should PUT to toggle a milestone', () => {
-    service.toggleMilestone(42).subscribe();
+  it('should PUT to toggle a milestone and return a gamified result', () => {
+    const mockResponse = {
+      data: { id: 1, title: 'Run a marathon', status: 'Active', progressPercent: 50, milestones: [] },
+      xpAwarded: 25,
+      newLevel: null,
+      levelUp: false,
+      newAchievements: [],
+      idempotent: false
+    };
+
+    service.toggleMilestone(42).subscribe(result => {
+      expect(result.data.id).toBe(1);
+      expect(result.xpAwarded).toBe(25);
+    });
 
     const req = httpMock.expectOne('/api/milestones/42/toggle');
     expect(req.request.method).toBe('PUT');
-    req.flush({ id: 1, milestones: [] });
+    req.flush(mockResponse);
+  });
+
+  it('should PUT to update a goal and return a gamified result', () => {
+    const mockResponse = {
+      data: { id: 1, title: 'Run a marathon', status: 'Completed', progressPercent: 100, milestones: [] },
+      xpAwarded: 100,
+      newLevel: 3,
+      levelUp: true,
+      newAchievements: [],
+      idempotent: false
+    };
+
+    service.update(1, { status: 'Completed' }).subscribe(result => {
+      expect(result.data.status).toBe('Completed');
+      expect(result.levelUp).toBe(true);
+    });
+
+    const req = httpMock.expectOne('/api/goals/1');
+    expect(req.request.method).toBe('PUT');
+    req.flush(mockResponse);
   });
 });

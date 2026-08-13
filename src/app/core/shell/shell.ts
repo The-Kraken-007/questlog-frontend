@@ -2,11 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastContainerComponent } from '../../shared/components/toast-container/toast-container';
 import { ModalComponent } from '../../shared/components/modal/modal';
+import { CelebrationHostComponent } from '../gamification/celebration-host';
 import { AuthService } from '../api/auth.service';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, ToastContainerComponent, ModalComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ToastContainerComponent, ModalComponent, CelebrationHostComponent],
   templateUrl: './shell.html',
   styleUrl: './shell.css',
 })

@@ -1,0 +1,30 @@
+@if (celebrations.xpGain(); as gain) {
+  <div class="xp-toast" role="status" aria-live="polite">
+    <span class="xp-toast__amount">+{{ gain.xp }} XP</span>
+  </div>
+}
+
+@if (celebrations.levelUp(); as level) {
+  <div class="level-overlay" role="dialog" aria-live="assertive">
+    <div class="level-overlay__card">
+      <div class="level-overlay__icon">⭐</div>
+      <div class="level-overlay__label">LEVEL UP!</div>
+      <div class="level-overlay__level">{{ level.level }}</div>
+      <div class="level-overlay__title">{{ level.title }}</div>
+    </div>
+  </div>
+}
+
+@if (celebrations.achievementUnlocks(); as unlocks) {
+  <div class="achievement-stack" role="status" aria-live="polite">
+    @for (a of unlocks; track a.key) {
+      <div class="achievement-toast">
+        <span class="achievement-toast__icon">{{ a.icon }}</span>
+        <div class="achievement-toast__body">
+          <div class="achievement-toast__title">{{ a.name }}</div>
+          <div class="achievement-toast__desc">{{ a.description }}</div>
+        </div>
+      </div>
+    }
+  </div>
+}

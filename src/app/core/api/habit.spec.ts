@@ -41,4 +41,24 @@ describe('HabitService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockHabits);
   });
+
+  it('should POST toggle and return a gamified result', () => {
+    const mockResponse = {
+      data: { id: 1, name: 'Drink Water', emoji: '💧', currentStreak: 1, isCompletedToday: true, isArchived: false, sortOrder: 0, createdAt: '' },
+      xpAwarded: 10,
+      newLevel: null,
+      levelUp: false,
+      newAchievements: [],
+      idempotent: false
+    };
+
+    service.toggle(1, '2026-07-05').subscribe(result => {
+      expect(result.data.id).toBe(1);
+      expect(result.xpAwarded).toBe(10);
+    });
+
+    const req = httpMock.expectOne('/api/habits/1/toggle/2026-07-05');
+    expect(req.request.method).toBe('POST');
+    req.flush(mockResponse);
+  });
 });

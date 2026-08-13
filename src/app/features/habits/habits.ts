@@ -4,6 +4,7 @@ import { HabitService } from '../../core/api/habit';
 import { HabitDto } from '../../core/models/habit';
 import { HabitCardComponent } from './components/habit-card/habit-card';
 import { CreateHabitModalComponent } from './components/create-habit-modal/create-habit-modal';
+import { CelebrationService } from '../../core/gamification/celebrations';
 
 @Component({
   selector: 'app-habits',
@@ -13,6 +14,7 @@ import { CreateHabitModalComponent } from './components/create-habit-modal/creat
 })
 export class Habits implements OnInit {
   private readonly habitService = inject(HabitService);
+  private readonly celebrations = inject(CelebrationService);
 
   habits = signal<HabitDto[]>([]);
   isLoading = signal(true);
@@ -48,11 +50,11 @@ export class Habits implements OnInit {
 
   onToggleHabit(habit: HabitDto) {
     const today = new Date().toISOString().split('T')[0];
-    
+
     // Optimistic UI update
     const previousCompleted = habit.isCompletedToday;
     const previousStreak = habit.currentStreak;
-    
+
     this.habits.update(list => list.map(h => {
       if (h.id === habit.id) {
         return {
@@ -64,11 +66,15 @@ export class Habits implements OnInit {
       return h;
     }));
 
-    // API call
+    // API call (returns GamifiedResult<HabitDto>)
     this.habitService.toggle(habit.id, today).subscribe({
-      next: (updatedHabit) => {
+      next: (response) => {
+        const updatedHabit = response.data;
         // Sync with exact server state just in case logic differed
         this.habits.update(list => list.map(h => h.id === updatedHabit.id ? updatedHabit : h));
+
+        // Fire celebrations for XP / level-up / achievement unlocks
+        this.celebrations.notifyFromGamifiedResult(response);
       },
       error: () => {
         // Error toast handled globally by errorInterceptor; revert the optimistic update
