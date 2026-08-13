@@ -71,7 +71,7 @@ export class CelebrationService {
   }): void {
     if (result.xpAwarded > 0) this.notifyXpGain(result.xpAwarded);
     if (result.levelUp && result.newLevel !== null) this.notifyLevelUp(result.newLevel);
-    if (result.newAchievements.length > 0) this.notifyAchievementUnlocks(result.newAchievements);
+    if (result.newAchievements?.length > 0) this.notifyAchievementUnlocks(result.newAchievements);
   }
 
   /** Dismiss everything immediately (used in tests). */

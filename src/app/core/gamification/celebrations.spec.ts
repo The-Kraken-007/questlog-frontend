@@ -98,6 +98,20 @@ describe('CelebrationService', () => {
     expect(service.achievementUnlocks()).toBeNull();
   });
 
+  it('notifyFromGamifiedResult handles undefined newAchievements gracefully', () => {
+    // Simulates a rolling deploy where backend returns a shape the frontend doesn't expect
+    service.notifyFromGamifiedResult({
+      xpAwarded: 10,
+      newLevel: null,
+      levelUp: false,
+      newAchievements: undefined as any
+    });
+
+    expect(service.xpGain()).toEqual({ xp: 10 });
+    expect(service.levelUp()).toBeNull();
+    expect(service.achievementUnlocks()).toBeNull();
+  });
+
   it('clear() removes all signals', () => {
     service.notifyXpGain(50);
     service.notifyLevelUp(3);
