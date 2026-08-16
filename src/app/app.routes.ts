@@ -9,6 +9,7 @@ import { Register } from './features/auth/register/register';
 import { ForgotPassword } from './features/auth/forgot-password/forgot-password';
 import { authGuard } from './core/api/auth.guard';
 import { Achievements } from './features/achievements/achievements';
+import { WeeklyReview } from './features/review/weekly-review/weekly-review';
 
 export const routes: Routes = [
   // ── Public routes (no auth required) ─────────────────────────────────────
@@ -28,6 +29,7 @@ export const routes: Routes = [
       { path: 'goals', component: Goals },
       { path: 'log', component: DailyLog },
       { path: 'achievements', component: Achievements },
+      { path: 'review', component: WeeklyReview },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   }

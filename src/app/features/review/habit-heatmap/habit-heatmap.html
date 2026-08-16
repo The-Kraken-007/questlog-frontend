@@ -1,0 +1,19 @@
+<div class="heatmap" role="img" aria-label="Habit completion heatmap for the week">
+  @for (label of dayLabels; track label; let i = $index) {
+    <div class="heatmap-cell-wrapper">
+      <span class="day-label">{{ label }}</span>
+      <div
+        class="heatmap-cell"
+        [class]="cellClass(days[i])"
+        [title]="tooltip(days[i])"
+        [attr.aria-label]="tooltip(days[i])"
+      ></div>
+    </div>
+  }
+</div>
+<div class="legend">
+  <span class="legend-item"><i class="swatch full"></i> All done</span>
+  <span class="legend-item"><i class="swatch partial"></i> Partial</span>
+  <span class="legend-item"><i class="swatch empty"></i> None</span>
+  <span class="legend-item"><i class="swatch none"></i> No habits</span>
+</div>

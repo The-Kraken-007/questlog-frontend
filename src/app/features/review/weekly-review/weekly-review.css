@@ -1,0 +1,195 @@
+.page-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.page-header h2 { margin: 0; }
+
+.subtitle { margin: 0; color: var(--color-text-muted); font-size: 0.95rem; }
+
+/* ── Week navigation ── */
+.week-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--color-surface-border);
+  background: transparent;
+  color: var(--color-text);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.nav-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.1); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.today-btn {
+  padding: 6px 14px;
+  border-radius: 18px;
+  border: 1px solid var(--color-surface-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.today-btn:hover { border-color: rgba(255, 255, 255, 0.25); color: var(--color-text); }
+.today-btn.active { background: rgba(124, 58, 237, 0.25); border-color: rgba(124, 58, 237, 0.6); color: var(--color-text); }
+
+/* ── Summary card ── */
+.summary-card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.summary-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.stat-icon { font-size: 1.4rem; }
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stat-label { font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ── Section cards ── */
+.section-card {
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.section-card h3 { margin: 0 0 14px; }
+
+.rate-badge {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  padding: 4px 10px;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 14px;
+}
+
+.sub-stats { margin: 14px 0 0; color: var(--color-text-muted); font-size: 0.85rem; }
+.sub-stats strong { color: var(--color-text); }
+
+/* ── Mini stats grid ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.mini-value { font-size: 1.2rem; font-weight: 700; color: var(--color-text); }
+.mini-value small { font-size: 0.7rem; color: var(--color-text-muted); font-weight: 400; }
+.mini-label { font-size: 0.72rem; color: var(--color-text-muted); }
+
+/* ── Reflection ── */
+.prompt { color: var(--color-text-muted); font-size: 0.9rem; margin: 0 0 10px; }
+
+.reflection-input {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--color-surface-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.reflection-input::placeholder { color: var(--color-text-muted); opacity: 0.6; }
+.reflection-input:focus { outline: none; border-color: rgba(124, 58, 237, 0.6); }
+
+.reflection-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.save-indicator { font-size: 0.8rem; color: var(--color-text-muted); }
+.save-indicator.saved { color: #34d399; }
+
+/* ── Achievements ── */
+.achievement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.achievement-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.achievement-icon { font-size: 1.3rem; }
+.achievement-name { flex: 1; font-size: 0.9rem; color: var(--color-text); }
+.achievement-date { font-size: 0.75rem; color: var(--color-text-muted); }
+
+/* ── Footer ── */
+.page-footer { margin-top: 20px; text-align: center; }
+
+/* ── Skeleton ── */
+.skeleton-grid { display: flex; flex-direction: column; gap: 16px; }
+.skeleton-card { height: 140px; }
+
+@media (max-width: 480px) {
+  .page-header { flex-direction: column; align-items: flex-start; }
+}
