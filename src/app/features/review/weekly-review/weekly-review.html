@@ -1,0 +1,133 @@
+<div class="page-container">
+
+  <!-- Page header with week navigation -->
+  <header class="page-header">
+    <div class="header-title">
+      <h2>Weekly Review</h2>
+      <p class="subtitle">{{ weekLabel() }}</p>
+    </div>
+    <div class="week-nav">
+      <button class="nav-btn" (click)="shiftWeek(-1)" title="Previous week">‹</button>
+      <button class="today-btn" (click)="shiftWeek(0)" [class.active]="isCurrentWeek()">This Week</button>
+      <button class="nav-btn" (click)="shiftWeek(1)" [disabled]="isCurrentWeek()" title="Next week">›</button>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+    <div class="skeleton-grid">
+      <div class="glass-panel skeleton-card"></div>
+      <div class="glass-panel skeleton-card"></div>
+      <div class="glass-panel skeleton-card"></div>
+    </div>
+  } @else if (review(); as r) {
+    <!-- Summary card -->
+    <section class="glass-panel summary-card">
+      <div class="summary-stat">
+        <span class="stat-icon">⚡</span>
+        <span class="stat-value">{{ r.xpEarned.total }}</span>
+        <span class="stat-label">XP earned</span>
+      </div>
+      <div class="summary-stat">
+        <span class="stat-icon">📈</span>
+        <span class="stat-value">{{ levelChangeLabel() }}</span>
+        <span class="stat-label">Level</span>
+      </div>
+      <div class="summary-stat">
+        <span class="stat-icon">🏆</span>
+        <span class="stat-value">{{ r.achievements.length }}</span>
+        <span class="stat-label">Achievements</span>
+      </div>
+    </section>
+
+    <!-- Habit performance -->
+    <section class="glass-panel section-card">
+      <div class="section-header">
+        <h3>Habit Performance</h3>
+        <span class="rate-badge">{{ habitRateLabel() }}</span>
+      </div>
+      <app-habit-heatmap [days]="r.habits.dailyBreakdown"></app-habit-heatmap>
+      <p class="sub-stats">
+        Best streak this week: <strong>{{ r.habits.bestStreak }}</strong> day{{ r.habits.bestStreak === 1 ? '' : 's' }}
+      </p>
+    </section>
+
+    <!-- Goal progress -->
+    <section class="glass-panel section-card">
+      <h3>Goal Progress</h3>
+      <div class="stat-grid">
+        <div class="mini-stat">
+          <span class="mini-value">{{ r.goals.active }}</span>
+          <span class="mini-label">Active goals</span>
+        </div>
+        <div class="mini-stat">
+          <span class="mini-value">{{ r.goals.completed }}</span>
+          <span class="mini-label">Completed</span>
+        </div>
+        <div class="mini-stat">
+          <span class="mini-value">{{ r.goals.milestonesCompleted }}</span>
+          <span class="mini-label">Milestones hit</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Daily log stats -->
+    <section class="glass-panel section-card">
+      <h3>Daily Log</h3>
+      <div class="stat-grid">
+        <div class="mini-stat">
+          <span class="mini-value">{{ r.dailyLogs.daysLogged }}<small>/7</small></span>
+          <span class="mini-label">Days logged</span>
+        </div>
+        <div class="mini-stat">
+          <span class="mini-value">{{ r.dailyLogs.wordCount }}</span>
+          <span class="mini-label">Words written</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reflection prompt -->
+    <section class="glass-panel section-card">
+      <div class="section-header">
+        <h3>Reflection</h3>
+        @if (isSaving()) {
+          <span class="save-indicator">⏳ Saving...</span>
+        } @else if (isSaved()) {
+          <span class="save-indicator saved">✓ Saved</span>
+        }
+      </div>
+      <p class="prompt">What went well this week?</p>
+      <textarea
+        class="reflection-input"
+        [(ngModel)]="notes"
+        placeholder="Write a short note about your wins, struggles, and what you want to improve..."
+      ></textarea>
+      <div class="reflection-footer">
+        <button class="btn btn-primary" (click)="saveReflection()" [disabled]="isSaving() || !notes.trim()">
+          Save Reflection
+        </button>
+      </div>
+    </section>
+
+    <!-- Achievements unlocked this week -->
+    @if (r.achievements.length > 0) {
+      <section class="glass-panel section-card">
+        <h3>Achievements Unlocked</h3>
+        <div class="achievement-list">
+          @for (a of r.achievements; track a.key) {
+            <div class="achievement-row">
+              <span class="achievement-icon">{{ a.icon }}</span>
+              <span class="achievement-name">{{ a.name }}</span>
+              <span class="achievement-date">{{ a.unlockedAt | date:'MMM d' }}</span>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  }
+
+  <!-- Back to dashboard -->
+  <footer class="page-footer">
+    <a routerLink="/dashboard" class="btn">← Back to Dashboard</a>
+  </footer>
+
+</div>
