@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DailyLogDto, CreateOrUpdateLogRequest } from '../models/daily-log';
+import { GamifiedResult } from '../models/gamified-result';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class DailyLogService {
     return this.http.get<DailyLogDto[]>(this.baseUrl, { params: { from, to } });
   }
 
-  save(request: CreateOrUpdateLogRequest): Observable<DailyLogDto> {
-    return this.http.post<DailyLogDto>(this.baseUrl, request);
+  save(request: CreateOrUpdateLogRequest): Observable<GamifiedResult<DailyLogDto>> {
+    return this.http.post<GamifiedResult<DailyLogDto>>(this.baseUrl, request);
   }
 }

@@ -37,17 +37,26 @@ describe('DailyLogService', () => {
     req.flush(mockLog);
   });
 
-  it('should POST to save a log', () => {
+  it('should POST to save a log and return a gamified result', () => {
     const payload = { date: '2026-07-05', content: 'Test entry' };
+    const mockResponse = {
+      data: { id: 1, date: '2026-07-05', content: 'Test entry', createdAt: '', updatedAt: '' },
+      xpAwarded: 15,
+      newLevel: null,
+      levelUp: false,
+      newAchievements: [],
+      idempotent: false
+    };
 
-    service.save(payload).subscribe(log => {
-      expect(log.date).toBe('2026-07-05');
+    service.save(payload).subscribe(result => {
+      expect(result.data.date).toBe('2026-07-05');
+      expect(result.xpAwarded).toBe(15);
     });
 
     const req = httpMock.expectOne('/api/logs');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(payload);
-    req.flush({ id: 1, ...payload, createdAt: '', updatedAt: '' });
+    req.flush(mockResponse);
   });
 
   it('should GET logs in range', () => {

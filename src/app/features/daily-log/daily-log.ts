@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DailyLogService } from '../../core/api/daily-log';
 import { DailyLogDto } from '../../core/models/daily-log';
+import { CelebrationService } from '../../core/gamification/celebrations';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -14,6 +15,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class DailyLog implements OnInit, OnDestroy {
   private readonly logService = inject(DailyLogService);
+  private readonly celebrations = inject(CelebrationService);
   private readonly destroy$ = new Subject<void>();
   private readonly contentChange$ = new Subject<string>();
 
@@ -113,13 +115,15 @@ export class DailyLog implements OnInit, OnDestroy {
     this.isSaved.set(false);
 
     this.logService.save({ date: this.selectedDate(), content }).subscribe({
-      next: (saved) => {
+      next: (response) => {
         this.isSaving.set(false);
         this.isSaved.set(true);
         // Refresh history so the sidebar stays up to date
         this.loadHistory();
         // Auto-clear "Saved" badge after 2s
         setTimeout(() => this.isSaved.set(false), 2000);
+        // Celebrate XP / level-up / achievement unlocks (only fires on first create)
+        this.celebrations.notifyFromGamifiedResult(response);
       },
       error: () => {
         // Error toast handled globally by errorInterceptor

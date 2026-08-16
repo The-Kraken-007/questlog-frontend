@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { GoalDto, MilestoneDto, GoalStatus } from '../../../../core/models/goal';
 import { GoalService } from '../../../../core/api/goal';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar';
+import { CelebrationService } from '../../../../core/gamification/celebrations';
 
 @Component({
   selector: 'app-goal-card',
@@ -16,6 +17,7 @@ export class GoalCardComponent {
   @Output() goalUpdated = new EventEmitter<GoalDto>();
 
   private readonly goalService = inject(GoalService);
+  private readonly celebrations = inject(CelebrationService);
 
   isExpanded = signal(false);
   newMilestoneTitle = '';
@@ -39,7 +41,10 @@ export class GoalCardComponent {
 
   onToggleMilestone(ms: MilestoneDto) {
     this.goalService.toggleMilestone(ms.id).subscribe({
-      next: (updated) => this.goalUpdated.emit(updated),
+      next: (response) => {
+        this.goalUpdated.emit(response.data);
+        this.celebrations.notifyFromGamifiedResult(response);
+      },
       error: (err) => console.error('Failed to toggle milestone', err)
     });
   }
@@ -58,7 +63,10 @@ export class GoalCardComponent {
 
   onUpdateStatus(status: GoalStatus) {
     this.goalService.update(this.goal.id, { status }).subscribe({
-      next: (updated) => this.goalUpdated.emit(updated),
+      next: (response) => {
+        this.goalUpdated.emit(response.data);
+        this.celebrations.notifyFromGamifiedResult(response);
+      },
       error: (err) => console.error('Failed to update goal status', err)
     });
   }
